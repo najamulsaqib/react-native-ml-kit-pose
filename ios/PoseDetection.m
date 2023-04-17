@@ -47,6 +47,7 @@ static MLKPoseDetector *poseDetector;
   
   for (MLKPose *pose in poses) {
     return @{
+//      body landmarks
       @"leftShoulder": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftShoulder]],
       @"rightShoulder": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightShoulder]],
       @"leftElbow": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftElbow]],
@@ -59,6 +60,17 @@ static MLKPoseDetector *poseDetector;
       @"rightKnee": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightKnee]],
       @"leftAnkle": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftAnkle]],
       @"rightAnkle": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightAnkle]],
+      @"leftPinky": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftPinkyFinger]],
+//      hand and feet landmarks
+      @"leftIndex": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftIndexFinger]],
+      @"leftThumb": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftThumb]],
+      @"leftHeel": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftHeel]],
+      @"leftFootIndex": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftToe]],
+      @"rightPinky": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightPinkyFinger]],
+      @"rightIndex": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightIndexFinger]],
+      @"rightThumb": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightThumb]],
+      @"rightHeel": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightHeel]],
+      @"rightFootIndex": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightToe]],
     };
   }
   
@@ -70,6 +82,7 @@ static MLKPoseDetector *poseDetector;
   return @{
     @"x": @(position.x),
     @"y": @(position.y),
+    @"z": @(position.z),
     @"visibility": @(landmark.inFrameLikelihood)
   };
 }

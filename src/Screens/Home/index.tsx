@@ -10,11 +10,13 @@ import {
 
 import { View } from 'react-native';
 import { THomeStack } from 'src/Navigations/types';
-import { IPoseLandmarks, MLPose } from './PoseDetection';
-import Skeleton from './Skeleton';
+import { MLPose } from './components/PoseDetection';
+import { IPoseLandmarks } from './index.d';
+import Skeleton from './components/Skeleton';
 
-//@ts-expect-error //? Platform-specific extensions
-import { cameraDevice, poseCalculations, styles } from './Components';
+//@ts-expect-error
+//? Platform-specific extensions
+import { cameraDevice, poseCalculations, styles } from './components';
 
 const defaultPose: IPoseLandmarks = {
   leftShoulder: { x: 0, y: 0, visibility: 0 },
@@ -29,15 +31,28 @@ const defaultPose: IPoseLandmarks = {
   rightKnee: { x: 0, y: 0, visibility: 0 },
   leftAnkle: { x: 0, y: 0, visibility: 0 },
   rightAnkle: { x: 0, y: 0, visibility: 0 },
+  leftPinky: { x: 0, y: 0, visibility: 0 },
+  leftIndex: { x: 0, y: 0, visibility: 0 },
+  leftThumb: { x: 0, y: 0, visibility: 0 },
+  leftHeel: { x: 0, y: 0, visibility: 0 },
+  leftFootIndex: { x: 0, y: 0, visibility: 0 },
+  rightPinky: { x: 0, y: 0, visibility: 0 },
+  rightIndex: { x: 0, y: 0, visibility: 0 },
+  rightThumb: { x: 0, y: 0, visibility: 0 },
+  rightHeel: { x: 0, y: 0, visibility: 0 },
+  rightFootIndex: { x: 0, y: 0, visibility: 0 },
 };
 
 const Home: React.FC<StackScreenProps<THomeStack>> = ({}) => {
   const pose = useSharedValue(defaultPose);
 
+  console.log(JSON.stringify(pose, null, 2));
+  // const index = useSharedValue(0);
+
   const [hasPermission, setHasPermission] = React.useState(false);
   const devices = useCameraDevices(cameraDevice);
 
-  const device = devices.front;
+  const device = devices.back;
 
   useEffect(() => {
     (async () => {
@@ -48,8 +63,9 @@ const Home: React.FC<StackScreenProps<THomeStack>> = ({}) => {
 
   const frameProcessor = useFrameProcessor(frame => {
     'worklet';
-    const results = MLPose(frame);
 
+    // Process the pose only for every second frame
+    const results = MLPose(frame);
     pose.value = poseCalculations(frame, results);
   }, []);
 
@@ -66,6 +82,10 @@ const Home: React.FC<StackScreenProps<THomeStack>> = ({}) => {
           frameProcessor={frameProcessor}
           orientation="portrait"
           onError={e => console.log(e, 'njm')}
+          frameProcessorFps={60}
+          onFrameProcessorPerformanceSuggestionAvailable={e =>
+            console.log('Suggestion: ', e.suggestedFrameProcessorFps)
+          }
         />
       ) : null}
       <Skeleton pose={pose} />

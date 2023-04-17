@@ -92,6 +92,26 @@ public class PosePlugin extends FrameProcessorPlugin {
                 return "rightShoulder";
             case PoseLandmark.RIGHT_WRIST:
                 return "rightWrist";
+            case PoseLandmark.LEFT_PINKY:
+                return "leftPinky";
+            case PoseLandmark.LEFT_INDEX:
+                return "leftIndex";
+            case PoseLandmark.LEFT_THUMB:
+                return "leftThumb";
+            case PoseLandmark.LEFT_HEEL:
+                return "leftHeel";
+            case PoseLandmark.LEFT_FOOT_INDEX:
+                return "leftFootIndex";
+            case PoseLandmark.RIGHT_PINKY:
+                return "rightPinky";
+            case PoseLandmark.RIGHT_INDEX:
+                return "rightIndex";
+            case PoseLandmark.RIGHT_THUMB:
+                return "rightThumb";
+            case PoseLandmark.RIGHT_HEEL:
+                return "rightHeel";
+            case PoseLandmark.RIGHT_FOOT_INDEX:
+                return "rightFootIndex";
             default:
                 return "";
         }
