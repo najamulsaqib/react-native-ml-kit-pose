@@ -9,7 +9,7 @@ To get started with this app, follow these steps:
 1. Clone this repository:
 
 ```
-git clone https://github.com/najam-falcon/react-native-ml-kit-pose
+git clone https://github.com/najamulsaqib/react-native-ml-kit-pose
 ```
 
 2. Install dependencies:
