@@ -1,21 +1,16 @@
 package com.camera.posedetector;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.media.Image;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.camera.core.ImageProxy;
 
-import com.facebook.react.bridge.ReadableMap;
-import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
-import com.google.gson.Gson;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.common.PointF3D;
 import com.google.mlkit.vision.pose.Pose;
@@ -25,14 +20,15 @@ import com.google.mlkit.vision.pose.PoseLandmark;
 import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions;
 import com.mrousavy.camera.frameprocessor.FrameProcessorPlugin;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class PosePlugin extends FrameProcessorPlugin {
-    private PoseDetectorOptions options = new PoseDetectorOptions.Builder().setDetectorMode(PoseDetectorOptions.STREAM_MODE).build();
-    private PoseDetector poseDetector = PoseDetection.getClient(options);
+    private PoseDetectorOptions options; //= new PoseDetectorOptions.Builder().setDetectorMode(PoseDetectorOptions.STREAM_MODE).build();
+    private PoseDetector poseDetector; //= PoseDetection.getClient(options);
+
+    public PosePlugin() {
+        super("poseDetection");
+        options = new PoseDetectorOptions.Builder().setDetectorMode(PoseDetectorOptions.STREAM_MODE).build();
+        poseDetector = PoseDetection.getClient(options);
+    }
 
     @Override
     public Object callback(ImageProxy imageProxy, Object[] params) {
@@ -41,8 +37,6 @@ public class PosePlugin extends FrameProcessorPlugin {
         Image mediaImage = imageProxy.getImage();
 
         if (mediaImage != null) {
-            List<PoseLandmark> landmarks = new ArrayList<PoseLandmark>();
-
             InputImage image =
                     InputImage.fromMediaImage(mediaImage, 270);
             // Pass image to an ML Kit Vision API
@@ -134,7 +128,4 @@ public class PosePlugin extends FrameProcessorPlugin {
         return result;
     }
 
-    PosePlugin() {
-        super("poseDetection");
-    }
 }

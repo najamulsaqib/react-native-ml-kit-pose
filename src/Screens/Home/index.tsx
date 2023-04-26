@@ -18,7 +18,7 @@ import Skeleton from './components/Skeleton';
 //? Platform-specific extensions
 import { cameraDevice, poseCalculations, styles } from './components';
 
-const defaultPose: IPoseLandmarks = {
+export const defaultPose: IPoseLandmarks = {
   leftShoulder: { x: 0, y: 0, visibility: 0 },
   rightShoulder: { x: 0, y: 0, visibility: 0 },
   leftElbow: { x: 0, y: 0, visibility: 0 },
@@ -45,9 +45,7 @@ const defaultPose: IPoseLandmarks = {
 
 const Home: React.FC<StackScreenProps<THomeStack>> = ({}) => {
   const pose = useSharedValue(defaultPose);
-
-  console.log(JSON.stringify(pose, null, 2));
-  // const index = useSharedValue(0);
+  const count = useSharedValue(0);
 
   const [hasPermission, setHasPermission] = React.useState(false);
   const devices = useCameraDevices(cameraDevice);
@@ -64,10 +62,20 @@ const Home: React.FC<StackScreenProps<THomeStack>> = ({}) => {
   const frameProcessor = useFrameProcessor(frame => {
     'worklet';
 
+    count.value++;
     // Process the pose only for every second frame
     const results = MLPose(frame);
+    // console.log(JSON.stringify(results, null, 2));
     pose.value = poseCalculations(frame, results);
   }, []);
+
+  useEffect(() => {
+    const timeout = setInterval(() => {
+      console.log(count.value++);
+      count.value = 0;
+    }, 999);
+    return () => clearInterval(timeout);
+  }, [count]);
 
   return (
     <View style={styles.main}>
@@ -82,10 +90,11 @@ const Home: React.FC<StackScreenProps<THomeStack>> = ({}) => {
           frameProcessor={frameProcessor}
           orientation="portrait"
           onError={e => console.log(e, 'njm')}
-          frameProcessorFps={60}
-          onFrameProcessorPerformanceSuggestionAvailable={e =>
-            console.log('Suggestion: ', e.suggestedFrameProcessorFps)
-          }
+          // fps={90}
+          // frameProcessorFps={90}
+          // onFrameProcessorPerformanceSuggestionAvailable={e =>
+          //   console.log('Suggestion: ', e.suggestedFrameProcessorFps)
+          // }
         />
       ) : null}
       <Skeleton pose={pose} />

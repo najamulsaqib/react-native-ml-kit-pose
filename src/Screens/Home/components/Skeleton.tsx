@@ -2,10 +2,8 @@
 import React from 'react';
 import { Dimensions } from 'react-native';
 import Animated, {
-  Easing,
   useAnimatedProps,
   useAnimatedStyle,
-  withTiming,
 } from 'react-native-reanimated';
 import { Circle, Line, Svg } from 'react-native-svg';
 import {
@@ -53,23 +51,15 @@ const usePosition: tUsePosition = (pose, landmark1, landmark2) => {
     const visibility1 = pose.value[landmark1].visibility;
     const visibility2 = pose.value[landmark2].visibility;
 
+    // x1: withTiming(pose.value[landmark1].x, {
+    //   duration: 10,
+    //   easing: Easing.linear,
+    // }),
     return {
-      x1: withTiming(pose.value[landmark1].x, {
-        duration: 10,
-        easing: Easing.linear,
-      }),
-      y1: withTiming(pose.value[landmark1].y, {
-        duration: 10,
-        easing: Easing.linear,
-      }),
-      x2: withTiming(pose.value[landmark2].x, {
-        duration: 10,
-        easing: Easing.linear,
-      }),
-      y2: withTiming(pose.value[landmark2].y, {
-        duration: 10,
-        easing: Easing.linear,
-      }),
+      x1: pose.value[landmark1].x,
+      y1: pose.value[landmark1].y,
+      x2: pose.value[landmark2].x,
+      y2: pose.value[landmark2].y,
       display: visibility1 > 0.6 && visibility2 > 0.6 ? 'flex' : 'none',
     };
   }, [pose]);
@@ -77,14 +67,8 @@ const usePosition: tUsePosition = (pose, landmark1, landmark2) => {
 
 const usePositionForCircle: tUsePositionForCircle = (pose, landmark) => {
   return useAnimatedProps(() => ({
-    cx: withTiming(pose.value[landmark].x, {
-      duration: 10,
-      easing: Easing.linear,
-    }),
-    cy: withTiming(pose.value[landmark].y, {
-      duration: 10,
-      easing: Easing.linear,
-    }),
+    cx: pose.value[landmark].x,
+    cy: pose.value[landmark].y,
     opacity: pose.value[landmark].visibility > 0.6 ? 1 : 0,
   }));
 };
