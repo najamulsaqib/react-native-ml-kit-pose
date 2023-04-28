@@ -1,10 +1,14 @@
 /* eslint-disable react-native/no-inline-styles */
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useSharedValue } from 'react-native-reanimated';
+import {} from '@react-navigation/material-top-tabs';
 import {
   Camera,
+  CameraDeviceFormat,
+  frameRateIncluded,
   useCameraDevices,
+  useCameraFormat,
   useFrameProcessor,
 } from 'react-native-vision-camera';
 
@@ -16,7 +20,7 @@ import Skeleton from './components/Skeleton';
 
 //@ts-expect-error
 //? Platform-specific extensions
-import { cameraDevice, poseCalculations, styles } from './components';
+import { cameraDevice, poseCalculations, styles, camera } from './components';
 
 export const defaultPose: IPoseLandmarks = {
   leftShoulder: { x: 0, y: 0, visibility: 0 },
@@ -49,8 +53,8 @@ const Home: React.FC<StackScreenProps<THomeStack>> = ({}) => {
 
   const [hasPermission, setHasPermission] = React.useState(false);
   const devices = useCameraDevices(cameraDevice);
-
-  const device = devices.back;
+  // @ts-ignore
+  const device = devices[camera];
 
   useEffect(() => {
     (async () => {
@@ -61,11 +65,9 @@ const Home: React.FC<StackScreenProps<THomeStack>> = ({}) => {
 
   const frameProcessor = useFrameProcessor(frame => {
     'worklet';
-
     count.value++;
     // Process the pose only for every second frame
     const results = MLPose(frame);
-    // console.log(JSON.stringify(results, null, 2));
     pose.value = poseCalculations(frame, results);
   }, []);
 
@@ -78,7 +80,7 @@ const Home: React.FC<StackScreenProps<THomeStack>> = ({}) => {
   }, [count]);
 
   return (
-    <View style={styles.main}>
+    <View style={styles[camera]}>
       {device != null && hasPermission ? (
         <Camera
           style={{
@@ -90,6 +92,7 @@ const Home: React.FC<StackScreenProps<THomeStack>> = ({}) => {
           frameProcessor={frameProcessor}
           orientation="portrait"
           onError={e => console.log(e, 'njm')}
+          frameProcessorFps={120}
           // fps={90}
           // frameProcessorFps={90}
           // onFrameProcessorPerformanceSuggestionAvailable={e =>

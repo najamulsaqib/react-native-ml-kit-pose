@@ -2,10 +2,15 @@ import { Dimensions, StyleSheet } from 'react-native';
 import { IPoseLandmarks, tPoseCalculations } from '../index.d';
 const { height, width } = Dimensions.get('window');
 
-const MAX_POSE_FRAMES = 6;
+const MAX_POSE_FRAMES = 1;
+const CAMERA: 'back' | 'front' = 'back'; // 'back' || 'front'
 
 const styles = StyleSheet.create({
-  main: {
+  front: {
+    flex: 1,
+    transform: [{ scaleX: -1 }],
+  },
+  back: {
     flex: 1,
     transform: [{ scaleX: -1 }, { scaleY: -1 }],
   },
@@ -97,4 +102,5 @@ module.exports = {
   styles,
   poseCalculations,
   cameraDevice: undefined, // 'ultra-wide-angle-camera',
+  camera: CAMERA,
 };
