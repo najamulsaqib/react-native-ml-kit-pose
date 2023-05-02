@@ -1,12 +1,18 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import { IPoseLandmarks, tPoseCalculations } from '../index.d';
 
-const MAX_POSE_FRAMES = 8;
+const MAX_POSE_FRAMES = 2;
 
 const { height, width } = Dimensions.get('window');
-
+const CAMERA: 'back' | 'front' = 'back'; // 'back' || 'front'
 const styles = StyleSheet.create({
   main: {
+    flex: 1,
+  },
+  front: {
+    flex: 1,
+  },
+  back: {
     flex: 1,
   },
 });
@@ -91,4 +97,5 @@ module.exports = {
   styles,
   poseCalculations,
   cameraDevice: undefined,
+  camera: CAMERA,
 };

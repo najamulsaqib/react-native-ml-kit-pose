@@ -1,3 +1,4 @@
+import { SkiaMutableValue, SkPoint } from '@shopify/react-native-skia';
 import React from 'react';
 import { AnimateProps, SharedValue } from 'react-native-reanimated';
 import { CircleProps, LineProps } from 'react-native-svg';
@@ -50,6 +51,25 @@ type tUsePositionForCircle = (
   pose: SharedValue<IPoseLandmarks>,
   landmark: keyof IPoseLandmarks,
 ) => Partial<AnimateProps<CircleProps>> | undefined;
+
+type tusePositionDerivedValue = (
+  pose: SharedValue<IPoseLandmarks>,
+  landmark: keyof IPoseLandmarks,
+) => {
+  cx: SkiaMutableValue<number>;
+  cy: SkiaMutableValue<number>;
+  opacity: SkiaMutableValue<number>;
+};
+
+type tusePositionSkia = (
+  pose: SharedValue<IPoseLandmarks>,
+  landmark1: keyof IPoseLandmarks,
+  landmark2: keyof IPoseLandmarks,
+) => {
+  p1: SkiaMutableValue<SkPoint>;
+  p2: SkiaMutableValue<SkPoint>;
+  display: SkiaMutableValue<number>;
+};
 
 interface ILineWithCircles {
   pose: SharedValue<IPoseLandmarks>;

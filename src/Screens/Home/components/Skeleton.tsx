@@ -1,16 +1,19 @@
 /* eslint-disable react-native/no-inline-styles */
+import {
+  Canvas,
+  Circle as SkiaCircle,
+  Line as SkiaLine,
+  useSharedValueEffect,
+  useValue,
+  vec,
+} from '@shopify/react-native-skia';
 import React from 'react';
 import { Dimensions } from 'react-native';
-import Animated, {
-  useAnimatedProps,
-  useAnimatedStyle,
-} from 'react-native-reanimated';
-import { Circle, Line, Svg } from 'react-native-svg';
 import {
   ILineWithCircles,
   ISkeleton,
-  tUsePosition,
-  tUsePositionForCircle,
+  tusePositionDerivedValue,
+  tusePositionSkia,
 } from '../index.d';
 
 const pairs = [
@@ -43,65 +46,68 @@ const pairs = [
   // ['rightHeel', 'rightAnkle'],
 ];
 
-const AnimatedLine = Animated.createAnimatedComponent(Line);
-const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+const usePositionSkia: tusePositionSkia = (pose, landmark1, landmark2) => {
+  const p1 = useValue(vec(0, 0));
+  const p2 = useValue(vec(0, 0));
+  const display = useValue(0);
 
-const usePosition: tUsePosition = (pose, landmark1, landmark2) => {
-  return useAnimatedStyle(() => {
+  useSharedValueEffect(() => {
     const visibility1 = pose.value[landmark1].visibility;
     const visibility2 = pose.value[landmark2].visibility;
-
-    // x1: withTiming(pose.value[landmark1].x, {
-    //   duration: 10,
-    //   easing: Easing.linear,
-    // }),
-    return {
-      x1: pose.value[landmark1].x,
-      y1: pose.value[landmark1].y,
-      x2: pose.value[landmark2].x,
-      y2: pose.value[landmark2].y,
-      display: visibility1 > 0.6 && visibility2 > 0.6 ? 'flex' : 'none',
-    };
-  }, [pose]);
+    p1.current = vec(pose.value[landmark1].x, pose.value[landmark1].y);
+    p2.current = vec(pose.value[landmark2].x, pose.value[landmark2].y);
+    display.current = visibility1 > 0.6 && visibility2 > 0.6 ? 1 : 0;
+  }, pose);
+  return { p1, p2, display };
 };
 
-const usePositionForCircle: tUsePositionForCircle = (pose, landmark) => {
-  return useAnimatedProps(() => ({
-    cx: pose.value[landmark].x,
-    cy: pose.value[landmark].y,
-    opacity: pose.value[landmark].visibility > 0.6 ? 1 : 0,
-  }));
+const usePositionDerivedValue: tusePositionDerivedValue = (pose, landmark) => {
+  const cx = useValue(0);
+  const cy = useValue(0);
+  const opacity = useValue(0);
+
+  useSharedValueEffect(() => {
+    cx.current = pose.value[landmark].x;
+    cy.current = pose.value[landmark].y;
+    opacity.current = pose.value[landmark].visibility > 0.6 ? 1 : 0;
+  }, pose);
+
+  return { cx, cy, opacity };
 };
 
-const LineWithCircles: React.FC<ILineWithCircles> = ({
+const LineWithCirclesSkia: React.FC<ILineWithCircles> = ({
   pose,
   landmark1,
   landmark2,
-  lineProps,
 }) => {
-  const landmark1CircleProps = usePositionForCircle(pose, landmark1);
-  const landmark2CircleProps = usePositionForCircle(pose, landmark2);
+  const landmark1CircleProps = usePositionDerivedValue(pose, landmark1);
+  const landmark2CircleProps = usePositionDerivedValue(pose, landmark2);
   const color1 = landmark1.startsWith('left') ? 'green' : 'orange';
   const color2 = landmark2.startsWith('left') ? 'green' : 'orange';
-
+  const path = usePositionSkia(pose, landmark1, landmark2);
   return (
     <>
-      <AnimatedLine
-        animatedProps={lineProps}
-        stroke="#ffee"
-        strokeWidth="2.5"
+      <SkiaLine
+        p1={path.p1}
+        p2={path.p2}
+        color="#ffee"
+        opacity={path.display}
+        style="stroke"
+        strokeWidth={2}
       />
-      <AnimatedCircle
-        animatedProps={landmark1CircleProps}
+      <SkiaCircle
         r={5}
-        stroke="#ffee"
-        fill={color1}
+        cx={landmark1CircleProps.cx}
+        cy={landmark1CircleProps.cy}
+        opacity={landmark1CircleProps.opacity}
+        color={color1}
       />
-      <AnimatedCircle
-        animatedProps={landmark2CircleProps}
+      <SkiaCircle
         r={5}
-        stroke="#ffee"
-        fill={color2}
+        opacity={landmark2CircleProps.opacity}
+        cx={landmark2CircleProps.cx}
+        cy={landmark2CircleProps.cy}
+        color={color2}
       />
     </>
   );
@@ -109,19 +115,12 @@ const LineWithCircles: React.FC<ILineWithCircles> = ({
 
 const Skeleton: ISkeleton = ({ pose }) => {
   const positions = pairs.map(([landmark1, landmark2]) => ({
-    // @ts-ignore
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    lineProps: usePosition(pose, landmark1, landmark2),
     landmark1,
     landmark2,
   }));
-
   const values = React.useMemo(() => Object.values(positions), [positions]);
-
   return (
-    <Svg
-      height={Dimensions.get('window').height}
-      width={Dimensions.get('window').width}
+    <Canvas
       style={{
         position: 'absolute',
         top: 0,
@@ -130,18 +129,17 @@ const Skeleton: ISkeleton = ({ pose }) => {
         width: Dimensions.get('window').width,
       }}>
       {React.Children.toArray(
-        values.map(({ landmark1, landmark2, lineProps }) => (
-          <LineWithCircles
+        values.map(({ landmark1, landmark2 }) => (
+          <LineWithCirclesSkia
             //@ts-ignore
             landmark1={landmark1}
             //@ts-ignore
             landmark2={landmark2}
-            lineProps={lineProps}
             pose={pose}
           />
         )),
       )}
-    </Svg>
+    </Canvas>
   );
 };
 
