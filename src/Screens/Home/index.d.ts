@@ -83,3 +83,5 @@ interface SkeletonProps {
 }
 
 type ISkeleton = React.FC<SkeletonProps>;
+
+type TCameraType = 'front' | 'back';
