@@ -1,26 +1,24 @@
 /* eslint-disable react-native/no-inline-styles */
 import { StackScreenProps } from '@react-navigation/stack';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSharedValue } from 'react-native-reanimated';
 import {} from '@react-navigation/material-top-tabs';
 import {
   Camera,
-  CameraDeviceFormat,
-  frameRateIncluded,
   useCameraDevices,
-  useCameraFormat,
   useFrameProcessor,
 } from 'react-native-vision-camera';
 
-import { View } from 'react-native';
+import { TouchableOpacity, View } from 'react-native';
 import { THomeStack } from 'src/Navigations/types';
 import { MLPose } from './components/PoseDetection';
-import { IPoseLandmarks } from './index.d';
+import { TCameraType, IPoseLandmarks } from './index.d';
 import Skeleton from './components/Skeleton';
 
 //@ts-expect-error
 //? Platform-specific extensions
-import { cameraDevice, poseCalculations, styles, camera } from './components';
+import { cameraDevice, poseCalculations, styles } from './components';
+import Icon from 'react-native-dynamic-vector-icons';
 
 export const defaultPose: IPoseLandmarks = {
   leftShoulder: { x: 0, y: 0, visibility: 0 },
@@ -50,9 +48,10 @@ export const defaultPose: IPoseLandmarks = {
 const Home: React.FC<StackScreenProps<THomeStack>> = ({}) => {
   const pose = useSharedValue(defaultPose);
   const count = useSharedValue(0);
+  const [camera, setCamera] = useState<TCameraType>('front');
 
   const [hasPermission, setHasPermission] = React.useState(false);
-  const devices = useCameraDevices(cameraDevice);
+  const devices = useCameraDevices(cameraDevice[camera]);
   // @ts-ignore
   const device = devices[camera];
 
@@ -80,28 +79,56 @@ const Home: React.FC<StackScreenProps<THomeStack>> = ({}) => {
   }, [count]);
 
   return (
-    <View style={styles[camera]}>
-      {device != null && hasPermission ? (
-        <Camera
+    <>
+      <View style={styles[camera]}>
+        {device != null && hasPermission ? (
+          <Camera
+            style={{
+              height: '100%',
+              width: '100%',
+            }}
+            device={device}
+            isActive={true}
+            frameProcessor={frameProcessor}
+            orientation="portrait"
+            onError={e => console.log(e, 'njm')}
+            frameProcessorFps={120}
+            // fps={90}
+            // frameProcessorFps={90}
+            // onFrameProcessorPerformanceSuggestionAvailable={e =>
+            //   console.log('Suggestion: ', e.suggestedFrameProcessorFps)
+            // }
+          />
+        ) : null}
+        <Skeleton pose={pose} />
+      </View>
+      <View
+        style={{
+          width: '100%',
+          position: 'absolute',
+          alignItems: 'center',
+          bottom: 20,
+        }}>
+        <TouchableOpacity
+          onPress={() =>
+            setCamera(prev => (prev === 'front' ? 'back' : 'front'))
+          }
           style={{
-            height: '100%',
-            width: '100%',
-          }}
-          device={device}
-          isActive={true}
-          frameProcessor={frameProcessor}
-          orientation="portrait"
-          onError={e => console.log(e, 'njm')}
-          frameProcessorFps={120}
-          // fps={90}
-          // frameProcessorFps={90}
-          // onFrameProcessorPerformanceSuggestionAvailable={e =>
-          //   console.log('Suggestion: ', e.suggestedFrameProcessorFps)
-          // }
-        />
-      ) : null}
-      <Skeleton pose={pose} />
-    </View>
+            height: 100,
+            width: 100,
+            // backgroundColor: 'red',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}>
+          <Icon
+            type="MaterialIcons"
+            name={{ front: 'camera-front', back: 'camera-rear' }[camera]}
+            size={70}
+            color={{ front: 'blue', back: 'red' }[camera]}
+          />
+        </TouchableOpacity>
+      </View>
+    </>
   );
 };
 

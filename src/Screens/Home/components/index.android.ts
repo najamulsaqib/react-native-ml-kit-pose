@@ -3,7 +3,6 @@ import { IPoseLandmarks, tPoseCalculations } from '../index.d';
 const { height, width } = Dimensions.get('window');
 
 const MAX_POSE_FRAMES = 1;
-const CAMERA: 'back' | 'front' = 'back'; // 'back' || 'front'
 
 const styles = StyleSheet.create({
   front: {
@@ -101,6 +100,8 @@ const poseCalculations: tPoseCalculations = (frame, results) => {
 module.exports = {
   styles,
   poseCalculations,
-  cameraDevice: undefined, // 'ultra-wide-angle-camera',
-  camera: CAMERA,
+  cameraDevice: {
+    front: 'ultra-wide-angle-camera',
+    back: undefined,
+  },
 };

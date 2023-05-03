@@ -4,7 +4,6 @@ import { IPoseLandmarks, tPoseCalculations } from '../index.d';
 const MAX_POSE_FRAMES = 2;
 
 const { height, width } = Dimensions.get('window');
-const CAMERA: 'back' | 'front' = 'back'; // 'back' || 'front'
 const styles = StyleSheet.create({
   main: {
     flex: 1,
@@ -96,6 +95,8 @@ const poseCalculations: tPoseCalculations = (frame, results) => {
 module.exports = {
   styles,
   poseCalculations,
-  cameraDevice: undefined,
-  camera: CAMERA,
+  cameraDevice: {
+    front: undefined,
+    back: undefined,
+  },
 };
