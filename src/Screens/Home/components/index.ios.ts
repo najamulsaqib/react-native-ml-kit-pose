@@ -1,9 +1,8 @@
-import { StyleSheet, Dimensions } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { IPoseLandmarks, tPoseCalculations } from '../index.d';
 
 const MAX_POSE_FRAMES = 2;
 
-const { height, width } = Dimensions.get('window');
 const styles = StyleSheet.create({
   main: {
     flex: 1,
@@ -22,8 +21,15 @@ const poseCalculations: tPoseCalculations = (frame, results) => {
   'worklet';
 
   //  Calculate factors to scale the pose landmarks based on the frame dimensions
-  const xFactor = width / frame.width;
-  const yFactor = height / frame.height;
+  // const xFactor = width / frame.width;
+  // const yFactor = height / frame.height;
+  // const diagonalFactor = 1;
+
+  // // Math.sqrt(width ** 2 + height ** 2) /
+  // // Math.sqrt(frame.width ** 2 + frame.height ** 2);
+
+  // const xFactor = width / frame.width;
+  // const yFactor = height / frame.height;
 
   // Create a copy of the IPoseLandmarks object, with all coordinates set to 0
   const poseCopy = {
@@ -79,8 +85,8 @@ const poseCalculations: tPoseCalculations = (frame, results) => {
 
       // Calculate the average position and visibility for this landmark
       poseCopy[key as keyof IPoseLandmarks] = {
-        x: (x.reduce((a, b) => a + b, 0) / x.length) * xFactor,
-        y: (y.reduce((a, b) => a + b, 0) / y.length) * yFactor,
+        x: x.reduce((a, b) => a + b, 0) / x.length, //* diagonalFactor,
+        y: y.reduce((a, b) => a + b, 0) / y.length, //* diagonalFactor,
         visibility: visibility.reduce((a, b) => a + b, 0) / visibility.length,
       };
     }

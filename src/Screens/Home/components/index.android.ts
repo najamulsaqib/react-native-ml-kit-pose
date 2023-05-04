@@ -1,8 +1,8 @@
 import { Dimensions, StyleSheet } from 'react-native';
 import { IPoseLandmarks, tPoseCalculations } from '../index.d';
-const { height, width } = Dimensions.get('window');
+const { height, width } = Dimensions.get('screen');
 
-const MAX_POSE_FRAMES = 1;
+const MAX_POSE_FRAMES = 2;
 
 const styles = StyleSheet.create({
   front: {

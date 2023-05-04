@@ -8,7 +8,6 @@ import {
   vec,
 } from '@shopify/react-native-skia';
 import React from 'react';
-import { Dimensions } from 'react-native';
 import {
   ILineWithCircles,
   ISkeleton,
@@ -125,8 +124,8 @@ const Skeleton: ISkeleton = ({ pose }) => {
         position: 'absolute',
         top: 0,
         left: 0,
-        height: Dimensions.get('window').height,
-        width: Dimensions.get('window').width,
+        height: '100%',
+        width: '100%',
       }}>
       {React.Children.toArray(
         values.map(({ landmark1, landmark2 }) => (
