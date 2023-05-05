@@ -1,8 +1,10 @@
 /* eslint-disable react-native/no-inline-styles */
 import { StackScreenProps } from '@react-navigation/stack';
 import React, { useEffect, useState } from 'react';
-import { useSharedValue } from 'react-native-reanimated';
-import {} from '@react-navigation/material-top-tabs';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated';
 import {
   Camera,
   useCameraDevices,
@@ -47,7 +49,12 @@ export const defaultPose: IPoseLandmarks = {
 
 const Home: React.FC<StackScreenProps<THomeStack>> = ({}) => {
   const pose = useSharedValue(defaultPose);
-  const count = useSharedValue(0);
+
+  const layout = useSharedValue<{
+    height: string | number;
+    width: string | number;
+  }>({ height: '100%', width: '100%' });
+
   const [camera, setCamera] = useState<TCameraType>('front');
 
   const [hasPermission, setHasPermission] = React.useState(false);
@@ -64,43 +71,58 @@ const Home: React.FC<StackScreenProps<THomeStack>> = ({}) => {
 
   const frameProcessor = useFrameProcessor(frame => {
     'worklet';
-    count.value++;
+    // count.value++;
+    // console.log(`Frame Dimensions ${Platform.OS} => `, frame.toString());
     // Process the pose only for every second frame
+    layout.value = {
+      height: frame.height,
+      width: frame.width,
+    };
+
     const results = MLPose(frame);
     pose.value = poseCalculations(frame, results);
   }, []);
 
-  useEffect(() => {
-    const timeout = setInterval(() => {
-      console.log(count.value++);
-      count.value = 0;
-    }, 999);
-    return () => clearInterval(timeout);
-  }, [count]);
-
+  // useEffect(() => {
+  //   const timeout = setInterval(() => {
+  //     // console.log(`FPS count ${Platform.OS} ~> `, count.value++);
+  //     count.value = 0;
+  //   }, 1000);
+  //   return () => clearInterval(timeout);
+  // }, [count]);
+  const cameraStyle = useAnimatedStyle(() => ({ ...layout.value }), []);
   return (
     <>
-      <View style={styles[camera]}>
-        {device != null && hasPermission ? (
-          <Camera
-            style={{
-              height: '100%',
-              width: '100%',
-            }}
-            device={device}
-            isActive={true}
-            frameProcessor={frameProcessor}
-            orientation="portrait"
-            onError={e => console.log(e, 'njm')}
-            frameProcessorFps={120}
-            // fps={90}
-            // frameProcessorFps={90}
-            // onFrameProcessorPerformanceSuggestionAvailable={e =>
-            //   console.log('Suggestion: ', e.suggestedFrameProcessorFps)
-            // }
-          />
-        ) : null}
-        <Skeleton pose={pose} />
+      <View
+        style={[
+          styles[camera],
+          { alignItems: 'center', justifyContent: 'center' },
+        ]}>
+        <Animated.View style={cameraStyle}>
+          {device != null && hasPermission ? (
+            <Camera
+              // key={orientation}
+              style={{
+                height: '100%',
+                width: '100%',
+              }}
+              device={device}
+              isActive={true}
+              frameProcessor={frameProcessor}
+              orientation="portrait"
+              onError={e => console.log(e, 'njm')}
+              frameProcessorFps={120}
+              preset="vga-640x480" // ~~> downsize video quality
+              // fps={90}
+              // frameProcessorFps={90}
+              // onFrameProcessorPerformanceSuggestionAvailable={e =>
+              //   console.log('Suggestion: ', e.suggestedFrameProcessorFps)
+              // }
+            />
+          ) : null}
+
+          <Skeleton pose={pose} />
+        </Animated.View>
       </View>
       <View
         style={{
