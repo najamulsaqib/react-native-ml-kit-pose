@@ -60,55 +60,7 @@ public class PosePlugin extends FrameProcessorPlugin {
     }
 
     String getLandmarkType(int landmarkType) {
-        switch (landmarkType) {
-
-            case PoseLandmark.LEFT_ELBOW:
-                return "leftElbow";
-            case PoseLandmark.LEFT_ANKLE:
-                return "leftAnkle";
-            case PoseLandmark.LEFT_HIP:
-                return "leftHip";
-            case PoseLandmark.LEFT_KNEE:
-                return "leftKnee";
-            case PoseLandmark.LEFT_SHOULDER:
-                return "leftShoulder";
-            case PoseLandmark.LEFT_WRIST:
-                return "leftWrist";
-            case PoseLandmark.RIGHT_ANKLE:
-                return "rightAnkle";
-            case PoseLandmark.RIGHT_ELBOW:
-                return "rightElbow";
-            case PoseLandmark.RIGHT_HIP:
-                return "rightHip";
-            case PoseLandmark.RIGHT_KNEE:
-                return "rightKnee";
-            case PoseLandmark.RIGHT_SHOULDER:
-                return "rightShoulder";
-            case PoseLandmark.RIGHT_WRIST:
-                return "rightWrist";
-            case PoseLandmark.LEFT_PINKY:
-                return "leftPinky";
-            case PoseLandmark.LEFT_INDEX:
-                return "leftIndex";
-            case PoseLandmark.LEFT_THUMB:
-                return "leftThumb";
-            case PoseLandmark.LEFT_HEEL:
-                return "leftHeel";
-            case PoseLandmark.LEFT_FOOT_INDEX:
-                return "leftFootIndex";
-            case PoseLandmark.RIGHT_PINKY:
-                return "rightPinky";
-            case PoseLandmark.RIGHT_INDEX:
-                return "rightIndex";
-            case PoseLandmark.RIGHT_THUMB:
-                return "rightThumb";
-            case PoseLandmark.RIGHT_HEEL:
-                return "rightHeel";
-            case PoseLandmark.RIGHT_FOOT_INDEX:
-                return "rightFootIndex";
-            default:
-                return "";
-        }
+        return "landmark_" + String.valueOf(landmarkType);
     }
 
     WritableNativeMap pointToMap(@NonNull PointF point, @NonNull float visibility) {

@@ -8,42 +8,27 @@ import {
   vec,
 } from '@shopify/react-native-skia';
 import React from 'react';
-import { Dimensions } from 'react-native';
 import {
   ILineWithCircles,
+  IPoseLandmarks,
   ISkeleton,
   tusePositionDerivedValue,
   tusePositionSkia,
 } from '../index.d';
 
-const pairs = [
-  // body
-  ['leftWrist', 'leftElbow'],
-  ['leftElbow', 'leftShoulder'],
-  ['leftShoulder', 'leftHip'],
-  ['leftHip', 'leftKnee'],
-  ['leftKnee', 'leftAnkle'],
-  ['rightWrist', 'rightElbow'],
-  ['rightElbow', 'rightShoulder'],
-  ['rightShoulder', 'rightHip'],
-  ['rightHip', 'rightKnee'],
-  ['rightKnee', 'rightAnkle'],
-  ['leftShoulder', 'rightShoulder'],
-  ['leftHip', 'rightHip'],
-  // // hand
-  // ['leftPinky', 'leftIndex'],
-  // ['leftPinky', 'leftWrist'],
-  // ['leftIndex', 'leftWrist'],
-  // ['rightPinky', 'rightIndex'],
-  // ['rightPinky', 'rightWrist'],
-  // ['rightIndex', 'rightWrist'],
-  // //feet
-  // ['leftAnkle', 'leftFootIndex'],
-  // ['leftHeel', 'leftFootIndex'],
-  // ['leftHeel', 'leftAnkle'],
-  // ['rightAnkle', 'rightFootIndex'],
-  // ['rightHeel', 'rightFootIndex'],
-  // ['rightHeel', 'rightAnkle'],
+const pairs: [keyof IPoseLandmarks, keyof IPoseLandmarks][] = [
+  ['landmark_11', 'landmark_12'],
+  ['landmark_11', 'landmark_13'],
+  ['landmark_13', 'landmark_15'],
+  ['landmark_12', 'landmark_14'],
+  ['landmark_14', 'landmark_16'],
+  ['landmark_11', 'landmark_23'],
+  ['landmark_12', 'landmark_24'],
+  ['landmark_23', 'landmark_24'],
+  ['landmark_23', 'landmark_25'],
+  ['landmark_24', 'landmark_26'],
+  ['landmark_26', 'landmark_28'],
+  ['landmark_25', 'landmark_27'],
 ];
 
 const usePositionSkia: tusePositionSkia = (pose, landmark1, landmark2) => {
@@ -82,8 +67,8 @@ const LineWithCirclesSkia: React.FC<ILineWithCircles> = ({
 }) => {
   const landmark1CircleProps = usePositionDerivedValue(pose, landmark1);
   const landmark2CircleProps = usePositionDerivedValue(pose, landmark2);
-  const color1 = landmark1.startsWith('left') ? 'green' : 'orange';
-  const color2 = landmark2.startsWith('left') ? 'green' : 'orange';
+  // const color1 = landmark1.startsWith('left') ? 'green' : 'orange';
+  // const color2 = landmark2.startsWith('left') ? 'green' : 'orange';
   const path = usePositionSkia(pose, landmark1, landmark2);
   return (
     <>
@@ -100,14 +85,14 @@ const LineWithCirclesSkia: React.FC<ILineWithCircles> = ({
         cx={landmark1CircleProps.cx}
         cy={landmark1CircleProps.cy}
         opacity={landmark1CircleProps.opacity}
-        color={color1}
+        color={'orange'}
       />
       <SkiaCircle
         r={5}
         opacity={landmark2CircleProps.opacity}
         cx={landmark2CircleProps.cx}
         cy={landmark2CircleProps.cy}
-        color={color2}
+        color={'orange'}
       />
     </>
   );
@@ -125,16 +110,14 @@ const Skeleton: ISkeleton = ({ pose }) => {
         position: 'absolute',
         top: 0,
         left: 0,
-        height: Dimensions.get('window').height,
-        width: Dimensions.get('window').width,
+        height: '100%',
+        width: '100%',
       }}>
       {React.Children.toArray(
         values.map(({ landmark1, landmark2 }) => (
           <LineWithCirclesSkia
-            //@ts-ignore
-            landmark1={landmark1}
-            //@ts-ignore
-            landmark2={landmark2}
+            landmark1={landmark1 as keyof IPoseLandmarks}
+            landmark2={landmark2 as keyof IPoseLandmarks}
             pose={pose}
           />
         )),
