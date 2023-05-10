@@ -1,23 +1,10 @@
-import { StyleSheet } from 'react-native';
 import { IPoseLandmarks, tPoseCalculations } from '../index.d';
 
 const MAX_POSE_FRAMES = 2;
 
-const styles = StyleSheet.create({
-  main: {
-    flex: 1,
-  },
-  front: {
-    flex: 1,
-  },
-  back: {
-    flex: 1,
-  },
-});
-
 var poseArray: IPoseLandmarks[] = [];
 
-const poseCalculations: tPoseCalculations = (frame, results) => {
+export const poseCalculations: tPoseCalculations = (frame, results) => {
   'worklet';
 
   //  Calculate factors to scale the pose landmarks based on the frame dimensions
@@ -33,28 +20,39 @@ const poseCalculations: tPoseCalculations = (frame, results) => {
 
   // Create a copy of the IPoseLandmarks object, with all coordinates set to 0
   const poseCopy = {
-    leftShoulder: { x: 0, y: 0, visibility: 0 },
-    rightShoulder: { x: 0, y: 0, visibility: 0 },
-    leftElbow: { x: 0, y: 0, visibility: 0 },
-    rightElbow: { x: 0, y: 0, visibility: 0 },
-    leftWrist: { x: 0, y: 0, visibility: 0 },
-    rightWrist: { x: 0, y: 0, visibility: 0 },
-    leftHip: { x: 0, y: 0, visibility: 0 },
-    rightHip: { x: 0, y: 0, visibility: 0 },
-    leftKnee: { x: 0, y: 0, visibility: 0 },
-    rightKnee: { x: 0, y: 0, visibility: 0 },
-    leftAnkle: { x: 0, y: 0, visibility: 0 },
-    rightAnkle: { x: 0, y: 0, visibility: 0 },
-    leftPinky: { x: 0, y: 0, visibility: 0 },
-    leftIndex: { x: 0, y: 0, visibility: 0 },
-    leftThumb: { x: 0, y: 0, visibility: 0 },
-    leftHeel: { x: 0, y: 0, visibility: 0 },
-    leftFootIndex: { x: 0, y: 0, visibility: 0 },
-    rightPinky: { x: 0, y: 0, visibility: 0 },
-    rightIndex: { x: 0, y: 0, visibility: 0 },
-    rightThumb: { x: 0, y: 0, visibility: 0 },
-    rightHeel: { x: 0, y: 0, visibility: 0 },
-    rightFootIndex: { x: 0, y: 0, visibility: 0 },
+    landmark_0: { x: 0, y: 0, visibility: 0 },
+    landmark_1: { x: 0, y: 0, visibility: 0 },
+    landmark_2: { x: 0, y: 0, visibility: 0 },
+    landmark_3: { x: 0, y: 0, visibility: 0 },
+    landmark_4: { x: 0, y: 0, visibility: 0 },
+    landmark_5: { x: 0, y: 0, visibility: 0 },
+    landmark_6: { x: 0, y: 0, visibility: 0 },
+    landmark_7: { x: 0, y: 0, visibility: 0 },
+    landmark_8: { x: 0, y: 0, visibility: 0 },
+    landmark_9: { x: 0, y: 0, visibility: 0 },
+    landmark_10: { x: 0, y: 0, visibility: 0 },
+    landmark_11: { x: 0, y: 0, visibility: 0 },
+    landmark_12: { x: 0, y: 0, visibility: 0 },
+    landmark_13: { x: 0, y: 0, visibility: 0 },
+    landmark_14: { x: 0, y: 0, visibility: 0 },
+    landmark_15: { x: 0, y: 0, visibility: 0 },
+    landmark_16: { x: 0, y: 0, visibility: 0 },
+    landmark_17: { x: 0, y: 0, visibility: 0 },
+    landmark_18: { x: 0, y: 0, visibility: 0 },
+    landmark_19: { x: 0, y: 0, visibility: 0 },
+    landmark_20: { x: 0, y: 0, visibility: 0 },
+    landmark_21: { x: 0, y: 0, visibility: 0 },
+    landmark_22: { x: 0, y: 0, visibility: 0 },
+    landmark_23: { x: 0, y: 0, visibility: 0 },
+    landmark_24: { x: 0, y: 0, visibility: 0 },
+    landmark_25: { x: 0, y: 0, visibility: 0 },
+    landmark_26: { x: 0, y: 0, visibility: 0 },
+    landmark_27: { x: 0, y: 0, visibility: 0 },
+    landmark_28: { x: 0, y: 0, visibility: 0 },
+    landmark_29: { x: 0, y: 0, visibility: 0 },
+    landmark_30: { x: 0, y: 0, visibility: 0 },
+    landmark_31: { x: 0, y: 0, visibility: 0 },
+    landmark_32: { x: 0, y: 0, visibility: 0 },
   };
 
   // Use the pre-allocated array for the loop to reduce runtime overhead
@@ -96,13 +94,4 @@ const poseCalculations: tPoseCalculations = (frame, results) => {
   }
 
   return poseCopy;
-};
-
-module.exports = {
-  styles,
-  poseCalculations,
-  cameraDevice: {
-    front: undefined,
-    back: undefined,
-  },
 };

@@ -4,7 +4,7 @@ declare let _WORKLET: true | undefined;
 
 import { IPoseLandmarks } from '../index.d';
 
-export function MLPose(frame: Frame): IPoseLandmarks | null {
+export function MLPose(frame: Frame): IPoseLandmarks {
   'worklet';
   if (!_WORKLET) {
     throw new Error('MLPose must be called from a frame processor!');

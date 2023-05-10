@@ -48,29 +48,55 @@ static MLKPoseDetector *poseDetector;
   for (MLKPose *pose in poses) {
     return @{
 //      body landmarks
-      @"leftShoulder": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftShoulder]],
-      @"rightShoulder": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightShoulder]],
-      @"leftElbow": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftElbow]],
-      @"rightElbow": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightElbow]],
-      @"leftWrist": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftWrist]],
-      @"rightWrist": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightWrist]],
-      @"leftHip": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftHip]],
-      @"rightHip": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightHip]],
-      @"leftKnee": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftKnee]],
-      @"rightKnee": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightKnee]],
-      @"leftAnkle": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftAnkle]],
-      @"rightAnkle": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightAnkle]],
-      @"leftPinky": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftPinkyFinger]],
-//      hand and feet landmarks
-      @"leftIndex": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftIndexFinger]],
-      @"leftThumb": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftThumb]],
-      @"leftHeel": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftHeel]],
-      @"leftFootIndex": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftToe]],
-      @"rightPinky": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightPinkyFinger]],
-      @"rightIndex": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightIndexFinger]],
-      @"rightThumb": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightThumb]],
-      @"rightHeel": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightHeel]],
-      @"rightFootIndex": [self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightToe]],
+      @"landmark_0":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeNose]],
+      
+      @"landmark_4":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightEyeInner]],
+      @"landmark_5":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightEye]],
+      @"landmark_6":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightEyeOuter]],
+      
+      @"landmark_1":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftEyeInner]],
+      @"landmark_2":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftEye]],
+      @"landmark_3":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftEyeOuter]],
+      
+      @"landmark_8":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightEar]],
+      @"landmark_7":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftEar]],
+
+      @"landmark_10":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeMouthRight]],
+      @"landmark_9":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeMouthLeft]],
+      
+      @"landmark_12":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightShoulder]],
+      @"landmark_11":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftShoulder]],
+      
+      @"landmark_14":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightElbow]],
+      @"landmark_13":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftElbow]],
+      
+      @"landmark_16":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightWrist]],
+      @"landmark_15":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftWrist]],
+      
+      @"landmark_18":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightPinkyFinger]],
+      @"landmark_17":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftPinkyFinger]],
+      
+      @"landmark_20":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightIndexFinger]],
+      @"landmark_19":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftIndexFinger]],
+      
+      @"landmark_22":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightThumb]],
+      @"landmark_21":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftThumb]],
+      
+      @"landmark_24":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightHip]],
+      @"landmark_23":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftHip]],
+      
+      @"landmark_26":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightKnee]],
+      @"landmark_25":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftKnee]],
+      
+      @"landmark_28":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightAnkle]],
+      @"landmark_27":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftAnkle]],
+      
+      @"landmark_30":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightHeel]],
+      @"landmark_29":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftHeel]],
+      
+      @"landmark_32":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeRightToe]],
+      @"landmark_31":[self getLandmarkPosition:[pose landmarkOfType:MLKPoseLandmarkTypeLeftToe]],
+      
     };
   }
   
